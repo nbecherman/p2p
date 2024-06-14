@@ -1,22 +1,64 @@
 import React, { useState } from 'react';
+import Web3 from 'web3';
+import Exchange from '../contracts/Exchange.json';
 
-const CreateOffer = ({ account }) => {
+const CreateOffer = ({ account, addOffer }) => {
   const [amount, setAmount] = useState('');
   const [price, setPrice] = useState('');
   const [cvu, setCvu] = useState('');
   const [alias, setAlias] = useState('');
+  const [web3, setWeb3] = useState(null);
+  const [contract, setContract] = useState(null);
 
-  const handleSubmit = (e) => {
+  // Initialize web3 and contract
+  const initWeb3 = async () => {
+    if (window.ethereum) {
+      const web3Instance = new Web3(window.ethereum);
+      setWeb3(web3Instance);
+      const networkId = await web3Instance.eth.net.getId();
+      const deployedNetwork = Exchange.networks[networkId];
+      const contractInstance = new web3Instance.eth.Contract(
+        Exchange.abi,
+        deployedNetwork && deployedNetwork.address
+      );
+      setContract(contractInstance);
+    } else {
+      alert("Please install MetaMask to use this feature.");
+    }
+  };
+
+  useEffect(() => {
+    initWeb3();
+  }, []);
+
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    const offer = {
-      amount,
-      price,
-      sellerWalletAddress: account,
-      cvu,
-      alias,
-    };
-    console.log('Offer created:', offer);
-    // Aquí se puede agregar la lógica para enviar la oferta al backend o blockchain
+    if (contract) {
+      try {
+        await contract.methods.createOffer(
+          web3.utils.toWei(amount, 'ether'),
+          web3.utils.toWei(price, 'ether'),
+          cvu,
+          alias
+        ).send({ from: account });
+        
+        const offer = {
+          amount,
+          price,
+          sellerWalletAddress: account,
+          cvu,
+          alias,
+          id: Date.now(),
+        };
+        addOffer(offer);
+        setAmount('');
+        setPrice('');
+        setCvu('');
+        setAlias('');
+      } catch (error) {
+        console.error("Failed to create offer", error);
+      }
+    }
   };
 
   return (
@@ -67,3 +109,4 @@ const CreateOffer = ({ account }) => {
 };
 
 export default CreateOffer;
+

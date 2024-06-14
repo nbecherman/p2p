@@ -15,6 +15,7 @@ const Transaction = ({ offer }) => {
       <p>Transacción ID: {offer.id}</p>
       <p>Cantidad de USDT: {offer.amount}</p>
       <p>Precio en ARS: {offer.price}</p>
+      <p>CVU del Vendedor: {offer.cvu}</p>
       <button onClick={handleReceivePayment} disabled={received}>
         {received ? 'Pago recibido' : 'Marcar como recibido'}
       </button>
@@ -23,3 +24,5 @@ const Transaction = ({ offer }) => {
 };
 
 export default Transaction;
+
+

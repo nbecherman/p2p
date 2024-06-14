@@ -1,10 +1,6 @@
 import React from 'react';
 
-const offers = [
-  // Aquí irían las ofertas creadas
-];
-
-const OfferList = ({ onSelectOffer }) => {
+const OfferList = ({ offers, onSelectOffer }) => {
   return (
     <div>
       <h2>Ofertas Disponibles</h2>
@@ -21,3 +17,4 @@ const OfferList = ({ onSelectOffer }) => {
 };
 
 export default OfferList;
+
