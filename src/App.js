@@ -1,25 +1,22 @@
-import logo from './logo.svg';
-import './App.css';
+import React, { useState } from 'react';
+import WalletConnect from './components/WalletConnect';
+import CreateOffer from './components/CreateOffer';
+import OfferList from './components/OfferList';
+import Transaction from './components/Transaction';
 
-function App() {
+const App = () => {
+  const [selectedOffer, setSelectedOffer] = useState(null);
+  const [account, setAccount] = useState(null);
+
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+      <h1>P2P Criptomonedas</h1>
+      <WalletConnect setAccount={setAccount} />
+      {account && <CreateOffer account={account} />}
+      <OfferList onSelectOffer={setSelectedOffer} />
+      {selectedOffer && <Transaction offer={selectedOffer} />}
     </div>
   );
-}
+};
 
 export default App;
