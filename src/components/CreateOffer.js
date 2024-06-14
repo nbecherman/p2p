@@ -1,6 +1,8 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Web3 from 'web3';
-import Exchange from '../contracts/Exchange.json';
+import Exchange from '../../Contracts/Exchange.json';
+
+
 
 const CreateOffer = ({ account, addOffer }) => {
   const [amount, setAmount] = useState('');
